@@ -33,7 +33,9 @@ h1,h2,h3,h4{font-family:'Russo One',sans-serif;letter-spacing:1px}
   background:linear-gradient(180deg,rgba(20,9,42,.95) 0%,rgba(20,9,42,.85) 100%);
   backdrop-filter:blur(10px);
   border-bottom:1px solid var(--border);
-  padding:12px 24px;display:flex;align-items:center;gap:24px;flex-wrap:wrap;
+  padding:12px 24px;
+  padding-top:max(12px, env(safe-area-inset-top));
+  display:flex;align-items:center;gap:24px;flex-wrap:wrap;
 }
 .logo{
   font-family:'Russo One',sans-serif;font-size:1.7rem;letter-spacing:3px;
@@ -467,6 +469,7 @@ h1,h2,h3,h4{font-family:'Russo One',sans-serif;letter-spacing:1px}
 @media (max-width: 768px) {
   .header {
     padding: 10px 15px;
+    padding-top: max(10px, env(safe-area-inset-top));
     gap: 10px;
     justify-content: space-between;
   }
@@ -484,6 +487,7 @@ h1,h2,h3,h4{font-family:'Russo One',sans-serif;letter-spacing:1px}
     backdrop-filter: blur(10px);
     border-top: 1px solid var(--border);
     padding: 8px 0;
+    padding-bottom: max(8px, env(safe-area-inset-bottom));
     z-index: 100;
   }
   .nav-link {
@@ -503,7 +507,7 @@ h1,h2,h3,h4{font-family:'Russo One',sans-serif;letter-spacing:1px}
     display: none;
   }
   .page {
-    padding: 20px 14px 90px 14px; /* Aggiunto padding bottom per la nav fissa */
+    padding: 20px 14px 90px 14px;
   }
   .hero h1 {
     font-size: 2.2rem;

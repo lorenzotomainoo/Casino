@@ -195,11 +195,12 @@ async function renderLeaderboard(){
    GIOCO 1: RUOTA CRAZY TIME
    ========================================================= */
 
+// Sostituito 1x con 0x (perdita) per rendere il gioco sfidante
 const wheelSegmentsConfig = [
-  { type: 'mult', value: 1, count: 21, color: '#1a5f9e' }, 
-  { type: 'mult', value: 2, count: 13, color: '#e6b800' },
-  { type: 'mult', value: 5, count: 7,  color: '#9d4edd' },
-  { type: 'mult', value: 10,count: 4,  color: '#ff2e63' },
+  { type: 'mult', value: 0, count: 21, color: '#2a2a2a' }, // 0x PERDITA SECCA
+  { type: 'mult', value: 2, count: 13, color: '#e6b800' }, // 2x
+  { type: 'mult', value: 5, count: 7,  color: '#9d4edd' }, // 5x
+  { type: 'mult', value: 10,count: 4,  color: '#ff2e63' }, // 10x
   { type: 'bonus', name: 'Coin Flip', count: 4, color: '#ff6b9d' },
   { type: 'bonus', name: 'Cash Hunt', count: 2, color: '#06ffa5' },
   { type: 'bonus', name: 'Pachinko', count: 2, color: '#ffd60a' },
@@ -276,12 +277,10 @@ function drawWheel(){
     
     const midA = startA + segAngle / 2;
     const midR = midA * Math.PI / 180;
-    const tr = radius * 0.68; // Spostato verso il centro per lasciare spazio al testo radiale
+    const tr = radius * 0.68;
     const tx = tr * Math.cos(midR), ty = tr * Math.sin(midR);
     
-    // Ruota il testo per allinearlo al raggio (come i raggi di una ruota)
     let textAngle = midA;
-    // Corregge l'orientamento per non farlo vedere a testa in giù sulla sinistra
     if (textAngle > 90 && textAngle < 270) {
       textAngle += 180;
     }
@@ -348,9 +347,10 @@ function handleWheelResult(result, bet){
       recordWin('wheel', win);
       celebrate(win);
     } else {
-      toast(`${result.value}x · Ritenta!`, 'lose');
+      // Se il moltiplicatore è 0, la puntata è già stata sottratta, quindi il giocatore perde i soldi
+      toast(`${result.value}x · Hai perso la puntata!`, 'lose');
     }
-    wheelHistory.unshift({ label: historyLabel, color: result.value >= 5 ? 'var(--gold)' : 'var(--text-dim)' });
+    wheelHistory.unshift({ label: historyLabel, color: result.value >= 5 ? 'var(--gold)' : (result.value === 0 ? 'var(--red-bright)' : 'var(--text-dim)') });
   } else {
     wheelHistory.unshift({ label: result.name, color: result.color });
     activateBonus(result.name, bet);
@@ -797,7 +797,7 @@ function drawAviator(showCrash = false){
   
   function getXY(m){
     const xR = (Math.log(m) / Math.log(maxMult));
-    const yR = (1 - 1/m) / (1 - 1/maxMult); // Corretto per far salire la curva
+    const yR = (1 - 1/m) / (1 - 1/maxMult);
     return [xStart + xR * plotW, yStart - yR * plotH];
   }
   
@@ -851,7 +851,6 @@ function drawAviator(showCrash = false){
     ctx.arc(0, 0, 10, 0, Math.PI * 2);
     ctx.fill();
   } else {
-    // Calcola l'angolo della tangente per inclinare l'aereo verso l'alto
     const next = getXY(Math.min(mult * 1.05, maxMult));
     const angle = Math.atan2(next[1] - py, next[0] - px);
     ctx.rotate(angle);
@@ -860,8 +859,6 @@ function drawAviator(showCrash = false){
     ctx.fillStyle = '#FFD700';
     ctx.strokeStyle = '#B8860B';
     ctx.lineWidth = 1.5;
-    // Disegno aereo orientato con il muso verso destra (+x), che poi ruota
-    // Corpo
     ctx.beginPath();
     ctx.moveTo(18, 0);
     ctx.lineTo(-10, -5);
@@ -869,21 +866,18 @@ function drawAviator(showCrash = false){
     ctx.lineTo(-10, 5);
     ctx.closePath();
     ctx.fill(); ctx.stroke();
-    // Ala superiore
     ctx.beginPath();
     ctx.moveTo(2, -1);
     ctx.lineTo(-4, -12);
     ctx.lineTo(-10, -1);
     ctx.closePath();
     ctx.fill(); ctx.stroke();
-    // Ala inferiore
     ctx.beginPath();
     ctx.moveTo(2, 1);
     ctx.lineTo(-4, 12);
     ctx.lineTo(-10, 1);
     ctx.closePath();
     ctx.fill(); ctx.stroke();
-    // Coda
     ctx.beginPath();
     ctx.moveTo(-10, -1);
     ctx.lineTo(-15, -6);
