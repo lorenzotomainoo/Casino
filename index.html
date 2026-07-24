@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lota Casino · Giochi d'azzardo virtuali</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&family=Russo+One&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- WELCOME MODAL -->
+<div class="modal-overlay show" id="welcomeModal">
+  <div class="modal">
+    <h1>LOTA CASINO</h1>
+    <p>Benvenuto, giocatore. Inserisci il tuo nome per iniziare a puntare le tue lote.</p>
+    <input type="text" id="nameInput" maxlength="20" placeholder="Il tuo nome..." autocomplete="off">
+    <button id="startBtn">Entra nel casino</button>
+    <div class="welcome-rules">
+      <p>Ricevi in regalo <strong>1000 lote</strong> per iniziare.</p>
+      <p>Tre giochi ti aspettano: Ruota, Aviator, Slot Machine.</p>
+      <p>Le tue vincite salgono in classifica globale.</p>
+    </div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="logo" data-route="home">LOTA CASINO</div>
+  <nav class="nav">
+    <a href="#/home" class="nav-link" data-route="home">🏠 Home</a>
+    <a href="#/wheel" class="nav-link" data-route="wheel">🎡 Ruota</a>
+    <a href="#/aviator" class="nav-link" data-route="aviator">✈️ Aviator</a>
+    <a href="#/slots" class="nav-link" data-route="slots">🏺 Slot</a>
+    <a href="#/leaderboard" class="nav-link" data-route="leaderboard">🏆 Top</a>
+  </nav>
+  <div class="player-tag" id="playerTag">—</div>
+  <div class="balance">
+    <div class="coin">L</div>
+    <span class="balance-amount" id="balanceAmount">0</span>
+  </div>
+</header>
+
+<!-- HOME PAGE -->
+<section class="page" id="page-home">
+  <div class="hero">
+    <h1>LOTA CASINO</h1>
+    <p>Benvenuto, <span class="accent" id="homePlayerName">giocatore</span>. Scegli il tuo gioco, piazza la scommessa e Vinci le tue lote. Tre giochi, una sola valuta, una classifica globale.</p>
+  </div>
+
+  <div class="games-grid">
+    <a href="#/wheel" class="game-card wheel-card">
+      <div class="icon">🎡</div>
+      <h2>Ruota Crazy Time</h2>
+      <p>54 fette, moltiplicatori 1x, 2x, 5x, 10x e 4 giochi bonus speciali: Coin Flip, Cash Hunt, Pachinko e Crazy Time.</p>
+      <span class="play-btn">Gioca ora →</span>
+    </a>
+    <a href="#/aviator" class="game-card aviator-card">
+      <div class="icon">✈️</div>
+      <h2>Aviator</h2>
+      <p>L'aereo decolla e il moltiplicatore sale. Cashout prima che voli via: chi ha il coraggio vince di più.</p>
+      <span class="play-btn">Gioca ora →</span>
+    </a>
+    <a href="#/slots" class="game-card slots-card">
+      <div class="icon">🏺</div>
+      <h2>Tesoro dei Faraoni</h2>
+      <p>Slot machine a tema antico Egitto. Allinea 3 simboli su 5 linee di pagamento. Faraone paga 200x.</p>
+      <span class="play-btn">Gioca ora →</span>
+    </a>
+  </div>
+
+  <div class="quick-stats">
+    <div class="stat">
+      <div class="stat-label">Saldo</div>
+      <div class="stat-value" id="homeBalance">0</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Vincite Ruota</div>
+      <div class="stat-value" id="homeWheelWins">0</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Vincite Aviator</div>
+      <div class="stat-value" id="homeAviatorWins">0</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Vincite Slot</div>
+      <div class="stat-value" id="homeSlotsWins">0</div>
+    </div>
+  </div>
+</section>
+
+<!-- WHEEL PAGE -->
+<section class="page" id="page-wheel">
+  <div class="game-header">
+    <h1>Ruota Crazy Time</h1>
+    <p>54 fette. 4 bonus ai quattro angoli. Moltiplicatori fino a 10x.</p>
+  </div>
+
+  <div class="wheel-layout">
+    <div>
+      <div class="wheel-wrapper">
+        <div class="wheel-pointer"></div>
+        <svg id="wheelSvg" viewBox="-100 -100 200 200"></svg>
+        <div class="wheel-center">L</div>
+      </div>
+    </div>
+
+    <div>
+      <div class="panel">
+        <h3>Piazza scommessa</h3>
+        <div class="bet-controls">
+          <button class="bet-chip" data-add="5">+5</button>
+          <button class="bet-chip" data-add="25">+25</button>
+          <button class="bet-chip" data-add="100">+100</button>
+          <button class="bet-chip" data-add="500">+500</button>
+          <button class="bet-chip" data-add="0">Clear</button>
+        </div>
+        <div class="bet-input">
+          <div class="coin">L</div>
+          <input type="number" id="wheelBet" value="10" min="1">
+        </div>
+        <button class="btn-primary" id="wheelSpinBtn">GIRA LA RUOTA</button>
+      </div>
+
+      <div class="panel">
+        <h3>Giochi Bonus</h3>
+        <div class="bonus-list">
+          <div class="bonus-pill" style="--c:#ff6b9d">🪙 Coin Flip</div>
+          <div class="bonus-pill" style="--c:#06ffa5">🎯 Cash Hunt</div>
+          <div class="bonus-pill" style="--c:#ffd60a">🕹️ Pachinko</div>
+          <div class="bonus-pill" style="--c:#c77dff">💎 Crazy Time</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h3>Storico</h3>
+        <div class="history-list" id="wheelHistory"><span style="color:var(--text-dim);font-size:.85rem">Nessun giro ancora</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AVIATOR PAGE -->
+<section class="page" id="page-aviator">
+  <div class="game-header">
+    <h1>Aviator</h1>
+    <p>L'aereo decolla. Cashout al momento giusto, prima del crash.</p>
+  </div>
+
+  <div class="aviator-layout">
+    <div class="aviator-stage">
+      <div class="aviator-history" id="aviatorHistory"></div>
+      <canvas id="aviatorCanvas" width="800" height="400"></canvas>
+    </div>
+
+    <div>
+      <div class="panel">
+        <h3>Piazza scommessa</h3>
+        <div class="bet-controls">
+          <button class="bet-chip" data-add="5">+5</button>
+          <button class="bet-chip" data-add="25">+25</button>
+          <button class="bet-chip" data-add="100">+100</button>
+          <button class="bet-chip" data-add="0">Clear</button>
+        </div>
+        <div class="bet-input">
+          <div class="coin">L</div>
+          <input type="number" id="aviatorBet" value="10" min="1">
+        </div>
+        <button class="btn-primary" id="aviatorBetBtn">AVVIA VOLO</button>
+        <button class="cashout-btn" id="aviatorCashoutBtn" disabled>CASHOUT</button>
+        <div class="cashout-amount" id="cashoutAmount"></div>
+      </div>
+
+      <div class="panel">
+        <h3>Come funziona</h3>
+        <p style="font-size:.9rem;color:var(--text-dim);line-height:1.6">
+          L'aereo decolla e il moltiplicatore cresce. Premi <strong style="color:var(--green)">CASHOUT</strong> per ritirare la vincita
+          prima che l'aereo voli via. Se aspetti troppo, perdi la scommessa.
+          Il crash point è casuale: può avvenire a 1.00x come a 100x.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLOTS PAGE -->
+<section class="page" id="page-slots">
+  <div class="game-header">
+    <h1>Tesoro dei Faraoni</h1>
+    <p>Slot machine a tema antico Egitto · 3 rulli · 5 linee di pagamento</p>
+  </div>
+
+  <div class="slots-layout">
+    <div>
+      <div class="slot-machine">
+        <div class="slot-title">🏺 TESORO DEI FARAONI 🏺</div>
+        <div class="slot-frame" id="slotFrame">
+          <div class="slot-reel">
+            <div class="slot-symbol">🔺</div>
+            <div class="slot-symbol">👁️</div>
+            <div class="slot-symbol">🪲</div>
+          </div>
+          <div class="slot-reel">
+            <div class="slot-symbol">⚱️</div>
+            <div class="slot-symbol">🗡️</div>
+            <div class="slot-symbol">🏺</div>
+          </div>
+          <div class="slot-reel">
+            <div class="slot-symbol">🌾</div>
+            <div class="slot-symbol">🪙</div>
+            <div class="slot-symbol">🍋</div>
+          </div>
+        </div>
+        <div class="slot-message" id="slotMessage">Piazza la scommessa e gira i rulli</div>
+      </div>
+    </div>
+
+    <div>
+      <div class="panel">
+        <h3>Scommessa</h3>
+        <div class="bet-controls">
+          <button class="bet-chip" data-add="5">+5</button>
+          <button class="bet-chip" data-add="25">+25</button>
+          <button class="bet-chip" data-add="100">+100</button>
+          <button class="bet-chip" data-add="0">Clear</button>
+        </div>
+        <div class="bet-input">
+          <div class="coin">L</div>
+          <input type="number" id="slotsBet" value="10" min="1">
+        </div>
+        <button class="btn-primary" id="slotsSpinBtn">GIRA I RULLI</button>
+      </div>
+
+      <div class="panel">
+        <h3>Tabella vincite (3 uguali)</h3>
+        <div class="paytable-row"><span>🔺</span><span>200x</span></div>
+        <div class="paytable-row"><span>👁️</span><span>80x</span></div>
+        <div class="paytable-row"><span>🪲</span><span>45x</span></div>
+        <div class="paytable-row"><span>⚱️</span><span>22x</span></div>
+        <div class="paytable-row"><span>🗡️</span><span>13x</span></div>
+        <div class="paytable-row"><span>🏺</span><span>8x</span></div>
+        <div class="paytable-row"><span>🌾</span><span>4x</span></div>
+        <div class="paytable-row"><span>🪙</span><span>3x</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LEADERBOARD PAGE -->
+<section class="page" id="page-leaderboard">
+  <div class="game-header">
+    <h1>Classifica Globale</h1>
+    <p>I migliori giocatori del Lota Casino · Totali vincite per gioco</p>
+  </div>
+
+  <div class="lb-tabs">
+    <button class="lb-tab active" data-game="total">Totale</button>
+    <button class="lb-tab" data-game="wheel">Ruota</button>
+    <button class="lb-tab" data-game="aviator">Aviator</button>
+    <button class="lb-tab" data-game="slots">Slot</button>
+  </div>
+
+  <div class="lb-list" id="lbList"><div class="lb-empty">Caricamento classifica...</div></div>
+</section>
+
+<!-- BONUS MODAL -->
+<div class="modal-overlay" id="bonusModal">
+  <div class="modal bonus-modal">
+    <h2 id="bonusTitle">Bonus</h2>
+    <div class="bonus-content" id="bonusContent"></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
